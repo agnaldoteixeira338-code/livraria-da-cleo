@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Livraria da Cleo · Livros</title>
+<meta name="description" content="Livros escolhidos com carinho, prontos para uma nova estante. Veja os títulos disponíveis e compre pelo WhatsApp.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Livraria da Cleo">
+<meta property="og:description" content="Livros escolhidos com carinho, prontos para uma nova estante.">
+<meta property="og:url" content="https://agnaldoteixeira338-code.github.io/livraria-da-cleo/">
+<meta name="theme-color" content="#3a4422">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%234f5c2e'/%3E%3Cpath d='M9 10.5c2.6-1 5-.8 7 .9 2-1.7 4.4-1.9 7-.9v11c-2.6-1-5-.8-7 .9-2-1.7-4.4-1.9-7-.9z' fill='none' stroke='%23f6f2e6' stroke-width='1.8'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+/* VOICE: acolhedor e editorial, como uma pequena livraria de bairro
+   IDEA: a página se comporta como uma estante de madeira com livros de lombada
+   PICTURE: prateleira desenhada com as lombadas reais do catálogo, clicáveis
+   COLOUR and TYPE: oliva profundo dominante, creme de apoio, ocre como acento; Playfair Display + Inter
+   LAYOUT: faixa oliva com a estante, grade de capas, telas de detalhe, sobre, QR code e painel */
+:root{color-scheme:light dark;
+  --bg:light-dark(#f6f2e6,#171b12);--card:light-dark(#fffdf6,#20261a);--ink:light-dark(#2a3020,#eee9d9);
+  --soft:light-dark(#5f6650,#b4b49c);--line:light-dark(#e2dcc8,#343c2a);--muted:light-dark(#ece6d4,#262d1e);
+  --oliva:light-dark(#4f5c2e,#9aab68);--oliva-tx:light-dark(#fffdf6,#171b12);--deep:light-dark(#3a4422,#11150c);
+  --ocre:light-dark(#b0703f,#d79b62);--perigo:light-dark(#a3372b,#e07a6c)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:"Playfair Display",Georgia,serif;line-height:1.08;text-wrap:balance;margin:0;font-weight:600}
+a{color:inherit}
+button,input,textarea,select{font:inherit;color:inherit}
+.wrap{max-width:1240px;margin:0 auto;padding:0 max(5vw,16px)}
+.band{padding-top:clamp(28px,4vw,64px);padding-bottom:clamp(28px,4vw,64px)}
+/* Cabeçalho */
+header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;height:62px}
+.marca{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:"Playfair Display",serif;font-size:21px;font-weight:600}
+.marca svg{width:30px;height:30px;flex:none}
+nav{display:flex;gap:2px;flex-wrap:wrap;justify-content:flex-end}
+nav a{text-decoration:none;color:var(--soft);padding:10px 11px;border-radius:999px;font-size:15px}
+nav a:hover,nav a[aria-current=page]{color:var(--ink);background:var(--muted)}
+/* Hero */
+.hero{background:var(--deep);color:#f6f2e6;padding:clamp(36px,6vw,72px) 0 0;position:relative;overflow:hidden}
+.hero h1{font-size:clamp(40px,7vw,52px);color:#fffdf6}
+.hero p{color:#d8d6bf;max-width:52ch;margin:14px 0 0;font-size:17px}
+.hero .cta{margin-top:22px;display:flex;gap:10px;flex-wrap:wrap}
+.estante-svg{display:block;width:100%;height:clamp(170px,30vw,330px);margin-top:clamp(18px,3vw,32px)}
+.estante-svg a{cursor:pointer}
+.estante-svg .lomb{transition:transform .35s cubic-bezier(.2,.9,.3,1);transform-box:fill-box;transform-origin:bottom}
+.estante-svg a:hover .lomb,.estante-svg a:focus .lomb{transform:translateY(-14px)}
+/* Botões */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 20px;border-radius:999px;border:0;background:var(--oliva);color:var(--oliva-tx);font-weight:600;text-decoration:none;cursor:pointer;font-size:15px}
+.btn:hover{filter:brightness(1.08)}
+.btn.claro{background:#f6f2e6;color:#3a4422}
+.btn.contorno{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.ocre{background:var(--ocre);color:#fffdf6}
+.btn.perigo{background:var(--perigo);color:#fff}
+.btn.peq{min-height:38px;padding:0 14px;font-size:14px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--ocre);outline-offset:2px}
+/* Busca e filtros */
+.filtros{position:sticky;top:62px;z-index:10;background:var(--bg);padding:12px 0;border-bottom:1px solid var(--line);margin-bottom:18px}
+.busca{position:relative;max-width:560px}
+.busca input{width:100%;height:46px;border-radius:999px;border:1px solid var(--line);background:var(--card);padding:0 16px 0 44px;font-size:16px}
+.busca svg{position:absolute;left:15px;top:13px;width:20px;height:20px;color:var(--soft)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 2px;scrollbar-width:none}
+.chip{flex:none;min-height:38px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);cursor:pointer;font-size:14px}
+.chip[aria-pressed=true]{background:var(--oliva);color:var(--oliva-tx);border-color:var(--oliva)}
+.contagem{color:var(--soft);font-size:14px;margin:0 0 12px}
+/* Grade de livros */
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(200px,44vw),1fr));gap:clamp(12px,2vw,24px)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;animation:sobe .5s cubic-bezier(.2,.9,.3,1) both}
+.card:hover .capa>*{transform:scale(1.04)}
+.capa{display:block;aspect-ratio:2/3;overflow:hidden;background:var(--muted);position:relative}
+.capa>img,.capa>svg{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease}
+.selo{position:absolute;top:10px;left:10px;background:var(--ocre);color:#fffdf6;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px}
+.selo.cinza{background:#5f6650}
+.esgotado .capa>*{filter:grayscale(1);opacity:.75}
+.info{padding:14px;display:flex;flex-direction:column;gap:2px;flex:1}
+.cat{font-size:13px;color:var(--oliva);font-weight:600}
+.info h3{font-size:18px;margin-top:2px}
+.info h3 a{text-decoration:none}
+.autor{color:var(--soft);font-size:14px}
+.desc{color:var(--soft);font-size:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:6px}
+.rodape-card{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:12px;flex-wrap:wrap}
+.preco{font-family:"Playfair Display",serif;font-size:21px;font-weight:600;white-space:nowrap}
+.vazio{text-align:center;padding:48px 16px;border:1px dashed var(--line);border-radius:16px;color:var(--soft)}
+@keyframes sobe{from{opacity:0;transform:translateY(14px)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* Detalhe */
+.detalhe{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,5vw,56px);align-items:start}
+.detalhe .capa{border-radius:12px;box-shadow:0 24px 50px -20px rgba(30,35,15,.5);max-width:380px}
+.detalhe h1{font-size:clamp(32px,5vw,48px)}
+.voltar{display:inline-flex;align-items:center;gap:6px;color:var(--soft);text-decoration:none;margin-bottom:18px;min-height:44px}
+.compart{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:22px;color:var(--soft);font-size:14px}
+.ic{width:44px;height:44px;border-radius:999px;border:1px solid var(--line);display:inline-grid;place-items:center;background:var(--card);cursor:pointer;color:var(--ink)}
+.ic svg{width:19px;height:19px}
+.texto{white-space:pre-line;color:var(--soft);font-size:17px;max-width:68ch}
+/* Sobre */
+.sobre{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:clamp(24px,5vw,56px);align-items:start}
+.sobre .foto{aspect-ratio:4/5;border-radius:18px;overflow:hidden;background:var(--muted)}
+.sobre .foto img,.sobre .foto svg{width:100%;height:100%;object-fit:cover;display:block}
+/* Formulários e painel */
+.painel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}
+.caixa{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:clamp(16px,2.5vw,24px)}
+.caixa h2{font-size:24px;margin-bottom:14px}
+.campo{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.campo label{font-size:14px;font-weight:500}
+.campo input,.campo textarea,.campo select{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:10px 12px;font-size:16px;min-height:44px}
+.campo textarea{min-height:110px;resize:vertical}
+.campo small{color:var(--soft);font-size:13px}
+.linha{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0 12px}
+.check{display:flex;align-items:center;gap:10px;min-height:44px}
+.check input{width:20px;height:20px;accent-color:var(--oliva)}
+.erro{color:var(--perigo);font-size:13px}
+.lista-admin{display:flex;flex-direction:column;gap:8px}
+.item{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:12px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:12px}
+.item .mini{width:48px;aspect-ratio:2/3;border-radius:6px;overflow:hidden}
+.item .mini>*{width:100%;height:100%;object-fit:cover;display:block}
+.item b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item span{color:var(--soft);font-size:13px}
+.acoes{display:flex;gap:6px}
+.previa-capa{width:90px;aspect-ratio:2/3;border-radius:8px;overflow:hidden;margin-top:6px}
+.previa-capa>*{width:100%;height:100%;object-fit:cover;display:block}
+/* QR code */
+.qr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}
+.qr-prev{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;display:grid;place-items:center}
+.qr-prev canvas{max-width:100%;height:auto;width:min(100%,340px);image-rendering:pixelated}
+.passos{color:var(--soft);padding-left:20px}
+.passos li{margin-bottom:6px}
+/* Diálogo, aviso, rodapé */
+.fundo-modal{position:fixed;inset:0;background:rgba(15,18,10,.55);display:none;place-items:center;z-index:50;padding:16px}
+.fundo-modal.aberto{display:grid}
+.modal{background:var(--card);border-radius:16px;padding:22px;max-width:400px;width:100%}
+.modal p{color:var(--soft)}
+.aviso{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;z-index:60;font-size:15px;opacity:0;pointer-events:none;transition:opacity .25s}
+.aviso.on{opacity:1}
+footer{background:var(--deep);color:#d8d6bf;margin-top:64px;padding:40px 0;text-align:center}
+footer .nome{font-family:"Playfair Display",serif;font-size:24px;color:#fffdf6}
+.redes{display:flex;gap:10px;justify-content:center;margin:18px 0;flex-wrap:wrap}
+.redes a{width:44px;height:44px;border-radius:999px;border:1px solid #5c6a3a;display:grid;place-items:center;color:#f6f2e6}
+.redes svg{width:20px;height:20px}
+.nota{font-size:13px;color:var(--soft)}
+.topo-estante{display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.foto-add{display:grid;place-items:center;gap:6px;aspect-ratio:2/3;width:min(160px,42vw);border:2px dashed var(--line);border-radius:12px;background:var(--bg);cursor:pointer;color:var(--soft);text-align:center;font-size:14px;overflow:hidden;position:relative}
+.foto-add img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.foto-add input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.add-grid{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:start}
+.modal.largo{max-width:620px;max-height:calc(100dvh - 32px);overflow:auto}
+.editar-card{position:absolute;top:10px;right:10px;background:rgba(23,27,18,.75);color:#fffdf6;border:0;border-radius:999px;min-height:34px;padding:0 12px;font-size:13px;cursor:pointer}
+.tela-qr{position:fixed;inset:0;background:#fffdf6;color:#2a3020;z-index:70;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;text-align:center}
+.tela-qr.aberto{display:flex}
+.tela-qr canvas{width:min(82vw,62vh);height:auto;image-rendering:pixelated}
+.tela-qr h2{font-size:clamp(28px,6vw,44px)}
+.tela-qr p{margin:0;color:#5f6650;font-size:18px}
+@media(max-width:520px){.add-grid{grid-template-columns:minmax(0,1fr)}.foto-add{margin:0 auto}}
+[hidden]{display:none!important}
+@media(max-width:760px){.detalhe,.sobre,.painel,.qr{grid-template-columns:minmax(0,1fr)}.detalhe .capa{max-width:280px;margin:0 auto}}
+@media(max-width:600px){.top{height:auto;padding:8px 0;flex-wrap:wrap}.filtros{top:0;position:static}nav a{padding:10px 9px;font-size:14px}}
+@media print{header,footer,.nao-imprimir{display:none!important}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap top">
+    <a class="marca" href="#inicio">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="16" fill="#4f5c2e"/><path d="M9 10.5c2.6-1 5 -.8 7 .9 2-1.7 4.4-1.9 7-.9v11c-2.6-1-5-.8-7 .9-2-1.7-4.4-1.9-7-.9z" fill="none" stroke="#f6f2e6" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 11.4v11" stroke="#f6f2e6" stroke-width="1.8"/></svg>
+      <span id="marca-nome">Livraria da Cleo</span>
+    </a>
+    <nav aria-label="Principal">
+      <a href="#livros" data-nav="inicio">Livros</a>
+      <a href="#sobre" data-nav="sobre">Sobre</a>
+      <a href="#qrcode" data-nav="qrcode">QR code</a>
+      <a href="#admin" data-nav="admin" id="nav-admin" hidden>Painel</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- VITRINE -->
+  <section data-view="inicio">
+    <div class="hero">
+      <div class="wrap">
+        <h1 id="hero-nome">Livraria da Cleo</h1>
+        <p id="hero-slogan">Livros escolhidos com carinho, prontos para uma nova estante.</p>
+        <div class="cta"><a class="btn claro" href="#livros">Ver a estante</a><a class="btn contorno" style="color:#f6f2e6;border-color:#6b7a45" href="#sobre">Conheça a loja</a><button class="btn ocre" type="button" data-mostrar-qr>Mostrar QR code</button></div>
+        <svg class="estante-svg" id="estante" viewBox="0 0 960 300" preserveAspectRatio="xMinYMax meet" role="img" aria-label="Estante com os livros à venda"></svg>
+      </div>
+    </div>
+    <div class="wrap band" id="livros">
+      <div class="topo-estante"><div><h2 style="font-size:clamp(30px,4vw,40px)">A estante</h2>
+      <p class="nota" style="margin:6px 0 0">Toque num livro para ver os detalhes.</p></div>
+      <button class="btn" type="button" id="abrir-add" hidden>+ Adicionar livro</button></div>
+      <div class="filtros">
+        <div class="busca">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input id="q" type="search" placeholder="Buscar por título ou autor" aria-label="Buscar livros" autocomplete="off">
+        </div>
+        <div class="chips" id="chips" role="group" aria-label="Categorias"></div>
+      </div>
+      <p class="contagem" id="contagem" aria-live="polite"></p>
+      <div class="grade" id="grade"></div>
+    </div>
+  </section>
+
+  <!-- DETALHE DO LIVRO -->
+  <section data-view="livro" hidden>
+    <div class="wrap band" id="detalhe"></div>
+  </section>
+
+  <!-- SOBRE -->
+  <section data-view="sobre" hidden>
+    <div class="wrap band sobre" id="sobre"></div>
+  </section>
+
+  <!-- QR CODE -->
+  <section data-view="qrcode" hidden>
+    <div class="wrap band">
+      <h1 style="font-size:clamp(32px,5vw,46px)">QR code da loja</h1>
+      <p class="texto" style="margin-top:8px">Imprima e cole no balcão, em feiras ou em marcadores de página. Quem apontar a câmera do celular abre a estante na hora.</p>
+      <div class="qr" style="margin-top:22px">
+        <div class="caixa nao-imprimir">
+          <div class="campo"><label for="qr-tam">Tamanho: <span id="qr-tam-v">600</span> px</label><input id="qr-tam" type="range" min="200" max="1200" step="50" value="600"></div>
+          <div class="linha">
+            <div class="campo"><label for="qr-cor">Cor do código</label><input id="qr-cor" type="color" value="#3a4422"></div>
+            <div class="campo"><label for="qr-fundo">Cor do fundo</label><input id="qr-fundo" type="color" value="#fffdf6"></div>
+          </div>
+          <div class="campo"><label for="qr-logo">Logo no centro (opcional)</label><input id="qr-logo" type="file" accept="image/*"><small>Use uma imagem quadrada. O código continua legível com o logo.</small></div>
+          <button class="btn contorno peq" id="qr-sem-logo" type="button" hidden>Remover logo</button>
+          <div class="cta" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+            <button class="btn" id="qr-png" type="button">Baixar QR code (PNG)</button>
+            <button class="btn ocre" id="qr-folha" type="button">Baixar folha para imprimir</button>
+            <button class="btn contorno" id="qr-link" type="button">Copiar link da loja</button>
+            <button class="btn" type="button" data-mostrar-qr>Mostrar em tela cheia</button>
+          </div>
+          <p class="erro" id="qr-erro" hidden></p>
+          <h3 style="font-size:20px;margin-top:22px">Como usar</h3>
+          <ol class="passos">
+            <li>Escolha as cores e, se quiser, o logo da loja.</li>
+            <li>Toque em <b>Baixar folha para imprimir</b>: vem uma página A4 pronta, com o nome da loja e o QR code.</li>
+            <li>Imprima a folha. Teste apontando a câmera do celular antes de distribuir.</li>
+            <li>Para posts e stories, use <b>Baixar QR code (PNG)</b>.</li>
+            <li>Com um cliente na sua frente, toque em <b>Mostrar em tela cheia</b> e deixe ele apontar a câmera para a tela.</li>
+          </ol>
+        </div>
+        <div class="qr-prev"><canvas id="qr-canvas" width="300" height="300" aria-label="Prévia do QR code"></canvas><p class="nota" id="qr-url" style="text-align:center;word-break:break-all"></p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAINEL ADMINISTRATIVO -->
+  <section data-view="admin" hidden>
+    <div class="wrap band">
+      <h1 style="font-size:clamp(32px,5vw,46px)">Painel da loja</h1>
+      <p class="texto" id="admin-status" style="margin-top:6px">Conectando…</p>
+      <div id="admin-area" hidden>
+        <div class="painel" style="margin-top:20px">
+          <form class="caixa" id="form-livro" novalidate>
+            <h2 id="form-titulo">Adicionar livro</h2>
+            <input type="hidden" id="f-id">
+            <div class="campo"><label for="f-titulo">Título *</label><input id="f-titulo" maxlength="200" required></div>
+            <div class="campo"><label for="f-autor">Autor *</label><input id="f-autor" maxlength="120" required></div>
+            <div class="linha">
+              <div class="campo"><label for="f-preco">Preço (R$) *</label><input id="f-preco" inputmode="decimal" placeholder="39,90" required></div>
+              <div class="campo"><label for="f-estoque">Estoque *</label><input id="f-estoque" type="number" min="0" step="1" value="1" required></div>
+            </div>
+            <div class="campo"><label for="f-cat">Categoria *</label><input id="f-cat" list="lista-cats" maxlength="40" placeholder="Romance, Fantasia…" required><datalist id="lista-cats"></datalist><small>Escolha uma existente ou digite uma nova.</small></div>
+            <div class="campo"><label for="f-desc">Descrição *</label><textarea id="f-desc" maxlength="3000" required></textarea></div>
+            <div class="campo"><label for="f-capa">Foto da capa</label><input id="f-capa" type="file" accept="image/*"><small>Sem foto, o site desenha uma capa com o título.</small><div class="previa-capa" id="f-previa"></div></div>
+            <label class="check"><input type="checkbox" id="f-destaque"> Destacar na vitrine</label>
+            <p class="erro" id="f-erro" hidden></p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+              <button class="btn" type="submit" id="f-salvar">Salvar livro</button>
+              <button class="btn contorno" type="button" id="f-cancelar" hidden>Cancelar edição</button>
+            </div>
+          </form>
+          <div class="caixa">
+            <h2>Livros cadastrados</h2>
+            <div class="lista-admin" id="lista-admin"></div>
+          </div>
+        </div>
+        <form class="caixa" id="form-config" style="margin-top:24px" novalidate>
+          <h2>Dados da loja e página Sobre</h2>
+          <div class="linha">
+            <div class="campo"><label for="c-nome">Nome da loja *</label><input id="c-nome" maxlength="60" required></div>
+            <div class="campo"><label for="c-slogan">Slogan</label><input id="c-slogan" maxlength="140"></div>
+          </div>
+          <div class="linha">
+            <div class="campo"><label for="c-whats">WhatsApp</label><input id="c-whats" inputmode="numeric" placeholder="5511999999999"><small>Só números, com 55 e DDD. Ativa o botão Comprar.</small></div>
+            <div class="campo"><label for="c-insta">Instagram</label><input id="c-insta" placeholder="@sualoja"></div>
+            <div class="campo"><label for="c-face">Facebook (link)</label><input id="c-face" placeholder="https://facebook.com/…"></div>
+            <div class="campo"><label for="c-email">E-mail</label><input id="c-email" type="email"></div>
+          </div>
+          <div class="campo"><label for="c-stit">Título da página Sobre</label><input id="c-stit" maxlength="80"></div>
+          <div class="campo"><label for="c-stexto">Texto da página Sobre</label><textarea id="c-stexto" maxlength="5000"></textarea></div>
+          <div class="campo"><label for="c-foto">Foto da página Sobre</label><input id="c-foto" type="file" accept="image/*"></div>
+          <p class="erro" id="c-erro" hidden></p>
+          <button class="btn" type="submit">Salvar dados da loja</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="nome" id="rod-nome">Livraria da Cleo</div>
+    <div id="rod-slogan" style="font-size:15px;margin-top:4px"></div>
+    <div class="redes" id="redes"></div>
+    <div id="rod-email" style="font-size:14px"></div>
+    <div style="font-size:13px;margin-top:12px;opacity:.8">Livros e loja de exemplo: troque tudo pelo Painel.</div>
+  </div>
+</footer>
+
+<div class="fundo-modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-t">
+  <div class="modal"><h3 id="modal-t" style="font-size:22px">Excluir livro?</h3><p id="modal-p"></p>
+    <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap"><button class="btn contorno" id="modal-nao" type="button">Cancelar</button><button class="btn perigo" id="modal-sim" type="button">Excluir</button></div></div>
+</div>
+<div class="fundo-modal" id="modal-add" role="dialog" aria-modal="true" aria-labelledby="add-t">
+  <form class="modal largo" id="form-add" novalidate>
+    <h3 id="add-t" style="font-size:24px;margin-bottom:14px">Adicionar livro</h3>
+    <div class="add-grid">
+      <label class="foto-add" id="add-foto-caixa"><span id="add-foto-txt"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><br>Tirar ou escolher<br>a foto do livro</span><input id="add-foto" type="file" accept="image/*" aria-label="Foto do livro"></label>
+      <div>
+        <div class="campo"><label for="a-titulo">Título *</label><input id="a-titulo" maxlength="200"></div>
+        <div class="campo"><label for="a-autor">Autor *</label><input id="a-autor" maxlength="120"></div>
+        <div class="linha">
+          <div class="campo"><label for="a-preco">Preço (R$) *</label><input id="a-preco" inputmode="decimal" placeholder="39,90"></div>
+          <div class="campo"><label for="a-estoque">Quantidade</label><input id="a-estoque" type="number" min="0" step="1" value="1"></div>
+        </div>
+      </div>
+    </div>
+    <div class="campo"><label for="a-cat">Categoria *</label><input id="a-cat" list="lista-cats" maxlength="40" placeholder="Romance, Infantil…"></div>
+    <div class="campo"><label for="a-desc">Descrição e estado do livro</label><textarea id="a-desc" maxlength="3000" placeholder="Ex.: seminovo, sem marcas, capa dura."></textarea></div>
+    <label class="check"><input type="checkbox" id="a-destaque"> Destacar na vitrine</label>
+    <p class="erro" id="a-erro" hidden></p>
+    <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:8px"><button class="btn contorno" type="button" id="add-cancelar">Cancelar</button><button class="btn" type="submit" id="add-salvar">Publicar livro</button></div>
+  </form>
+</div>
+<div class="tela-qr" id="tela-qr" role="dialog" aria-modal="true" aria-labelledby="tq-nome">
+  <h2 id="tq-nome">Livraria da Cleo</h2>
+  <canvas id="tq-canvas" aria-label="QR code da vitrine"></canvas>
+  <p>Aponte a câmera do celular para ver os livros</p>
+  <button class="btn contorno" type="button" id="tq-fechar" style="color:#2a3020;border-color:#cfc8b0">Fechar</button>
+</div>
+<div class="aviso" id="aviso" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js" onerror="this.remove();var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';document.body.appendChild(s)"></script>
+<script>
+{
+// Endereço público da loja (usado no QR code e nos links de compartilhar)
+const SITE_URL = "https://agnaldoteixeira338-code.github.io/livraria-da-cleo/";
+
+// Catálogo de exemplo: aparece até o painel salvar dados, e para quem visita sem login
+const INICIAL = {
+  config: {nomeLoja:"Livraria da Cleo", slogan:"Livros escolhidos com carinho, prontos para uma nova estante.", whatsapp:"", instagram:"", facebook:"", email:"", sobreTitulo:"Sobre a loja", sobreTexto:"Aqui cada livro foi lido, cuidado e escolhido a dedo antes de ir para a estante.\n\nVendo exemplares novos e seminovos em ótimo estado. Envio pelos Correios para todo o Brasil e entrego em mãos na cidade.\n\nTem um livro que você procura e não encontrou? Me chame que eu tento achar para você.", sobreFoto:""},
+  livros: [
+    {id:"l1",titulo:"O Jardim das Horas",autor:"Clara Menezes",preco:42.9,categoria:"Romance",estoque:3,destaque:true,descricao:"Duas irmãs herdam uma casa com um jardim abandonado e, ao recuperá-lo estação por estação, reencontram as histórias que a família nunca contou.\n\nExemplar seminovo, sem marcas de uso.",capa:"",criadoEm:6},
+    {id:"l2",titulo:"Reino de Cinzas",autor:"Davi Albuquerque",preco:59.9,categoria:"Fantasia",estoque:2,destaque:true,descricao:"Uma aprendiz de ferreira descobre que o fogo da sua forja guarda a memória de um reino destruído. Primeiro volume de uma trilogia.\n\nEdição em capa dura.",capa:"",criadoEm:5},
+    {id:"l3",titulo:"A Última Testemunha",autor:"Helena Prado",preco:39.9,categoria:"Suspense",estoque:1,destaque:false,descricao:"Uma escrivã de cidade pequena percebe que o depoimento mais importante de um caso antigo foi trocado. Leitura de uma sentada só.",capa:"",criadoEm:4},
+    {id:"l4",titulo:"Pequenos Hábitos",autor:"Rafael Torres",preco:34.5,categoria:"Não-ficção",estoque:4,destaque:false,descricao:"Um guia prático e gentil para mudar a rotina aos poucos, com exercícios curtos ao fim de cada capítulo.",capa:"",criadoEm:3},
+    {id:"l5",titulo:"A Raposa e a Lua",autor:"Lia Campos",preco:29.9,categoria:"Infantil",estoque:0,destaque:false,descricao:"Uma raposa curiosa tenta alcançar a lua para devolvê-la ao céu. Ilustrado, ótimo para ler antes de dormir. Indicado a partir de 4 anos.",capa:"",criadoEm:2},
+    {id:"l6",titulo:"Cartas de Inverno",autor:"Clara Menezes",preco:44,categoria:"Romance",estoque:2,destaque:false,descricao:"Um romance contado em cartas trocadas entre dois desconhecidos durante um inverno rigoroso no sul do país.",capa:"",criadoEm:1}
+  ]
+};
+
+const S = {config:{...INICIAL.config}, livros:INICIAL.livros.slice(), doBanco:false, podeEditar:false, db:null, cat:null, q:"", logo:null, capaNova:null, fotoNova:null, apagar:null};
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const brl = n => Number(n || 0).toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
+const norm = t => String(t || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const so = t => String(t || "").replace(/\D/g, "");
+const hash = t => [...String(t)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
+const CORES = ["#4f5c2e","#3a4128","#7d5a3c","#6f7d4a","#a8764a","#4b5530","#8a9a5b","#94673f"];
+const url = () => SITE_URL || "";
+const linkLivro = l => url() ? url() + "#livro-" + l.id : "";
+const imgOk = v => typeof v === "string" && v.startsWith("data:image/");
+
+function aviso(msg) { const a = $("#aviso"); a.textContent = msg; a.classList.add("on"); clearTimeout(aviso.t); aviso.t = setTimeout(() => a.classList.remove("on"), 2600); }
+
+// Capa desenhada para livros sem foto
+function capaSVG(l) {
+  const cor = CORES[hash(l.id + l.titulo) % CORES.length];
+  const pal = String(l.titulo).split(/\s+/), linhas = []; let at = "";
+  for (const p of pal) { if ((at + " " + p).trim().length > 13 && at) { linhas.push(at); at = p; } else at = (at + " " + p).trim(); }
+  if (at) linhas.push(at);
+  const ls = linhas.slice(0, 5), y0 = 120 - ls.length * 13;
+  return `<svg viewBox="0 0 200 300" aria-hidden="true"><rect width="200" height="300" fill="${cor}"/><rect x="12" y="12" width="176" height="276" fill="none" stroke="#f6f2e6" stroke-opacity=".35"/><circle cx="100" cy="226" r="16" fill="none" stroke="#f6f2e6" stroke-opacity=".45"/><path d="M92 226h16M100 218v16" stroke="#f6f2e6" stroke-opacity=".45"/>${ls.map((t, i) => `<text x="100" y="${y0 + i * 27}" text-anchor="middle" font-family="Playfair Display,Georgia,serif" font-size="22" font-weight="600" fill="#fffdf6">${esc(t)}</text>`).join("")}<text x="100" y="272" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#f6f2e6" fill-opacity=".85">${esc(l.autor)}</text></svg>`;
+}
+const capa = l => imgOk(l.capa) ? `<img src="${esc(l.capa)}" alt="Capa de ${esc(l.titulo)}" loading="lazy">` : capaSVG(l);
+const ordenados = () => S.livros.slice().sort((a, b) => (b.destaque - a.destaque) || ((b.criadoEm || 0) - (a.criadoEm || 0)));
+const categorias = () => [...new Set(S.livros.map(l => l.categoria).filter(Boolean))].sort((a, b) => a.localeCompare(b, "pt-BR"));
+
+// Link do WhatsApp com mensagem pronta
+function linkWhats(l) {
+  const n = so(S.config.whatsapp); if (!n) return "";
+  return `https://wa.me/${n}?text=${encodeURIComponent(`Olá! Tenho interesse no livro "${l.titulo}", de ${l.autor}. Ainda está disponível?`)}`;
+}
+function botaoComprar(l, grande) {
+  const cls = "btn" + (grande ? "" : " peq");
+  if (l.estoque <= 0) return `<button class="${cls}" disabled>Esgotado</button>`;
+  const w = linkWhats(l);
+  if (!w) return grande ? `<span class="nota">Contato para compra em breve.</span>` : `<a class="${cls}" href="#livro-${esc(l.id)}">Ver</a>`;
+  return `<a class="${cls}" href="${esc(w)}" target="_blank" rel="noopener">${ICONE.whats}Comprar</a>`;
+}
+
+const ICONE = {
+  whats: `<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>`,
+  insta: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>`,
+  face: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21.9v-7.4H16l.4-2.9h-2.9V9.7c0-.8.3-1.4 1.5-1.4h1.5V5.7c-.3 0-1.2-.1-2.2-.1-2.2 0-3.8 1.4-3.8 3.8v2.2H8v2.9h2.5v7.4a10 10 0 1 1 3 0z"/></svg>`,
+  x: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.2 2.3h3.3l-7.2 8.3 8.5 11.1h-6.7l-5.2-6.8-6 6.8H1.7l7.7-8.8L1.3 2.3h6.8l4.7 6.2zm-1.1 17.5h1.8L7.1 4.1H5.1z"/></svg>`,
+  link: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.1 0l3-3a5 5 0 0 0-7.1-7.1l-1 1M14 11a5 5 0 0 0-7.1 0l-3 3a5 5 0 0 0 7.1 7.1l1-1"/></svg>`
+};
+
+// Prateleira do topo, desenhada com as lombadas do catálogo
+function desenharEstante() {
+  const ls = ordenados().slice(0, 14); let x = 40, out = "";
+  for (const l of ls) {
+    const h = 170 + hash(l.id) % 70, w = 38 + hash(l.titulo) % 20, cor = CORES[hash(l.id + l.titulo) % CORES.length], y = 262 - h;
+    const max = Math.floor((h - 34) / 7.6), t = l.titulo.length > max ? l.titulo.slice(0, max - 1) + "…" : l.titulo;
+    if (x + w > 900) break;
+    out += `<a href="#livro-${esc(l.id)}" aria-label="${esc(l.titulo)}"><g class="lomb"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="${cor}"/><rect x="${x}" y="${y}" width="5" height="${h}" fill="#000" opacity=".14"/><rect x="${x + 6}" y="${y + 14}" width="${w - 12}" height="2" fill="#f6f2e6" opacity=".5"/><rect x="${x + 6}" y="${y + h - 16}" width="${w - 12}" height="2" fill="#f6f2e6" opacity=".5"/><text transform="translate(${x + w / 2 + 5} ${y + h / 2}) rotate(-90)" text-anchor="middle" font-family="Playfair Display,Georgia,serif" font-size="13" font-weight="600" fill="#fffdf6">${esc(t)}</text></g></a>`;
+    x += w + 4;
+  }
+  // Livro inclinado, pilha deitada, vaso com planta e prateleira (largura acompanha o número de livros)
+  out += `<g transform="rotate(14 ${x + 6} 262)"><rect x="${x + 6}" y="92" width="40" height="170" rx="3" fill="#b0703f"/><rect x="${x + 12}" y="108" width="28" height="2" fill="#fffdf6" opacity=".5"/></g>`;
+  const px = x + 92;
+  out += `<rect x="${px}" y="240" width="130" height="22" rx="3" fill="#6f7d4a"/><rect x="${px + 8}" y="220" width="116" height="20" rx="3" fill="#94673f"/><rect x="${px + 2}" y="202" width="124" height="18" rx="3" fill="#8a9a5b"/>`;
+  const vx = px + 170;
+  out += `<g transform="translate(${vx - 864} 0)"><path d="M890 262h-52l6-52h40z" fill="#b0703f"/><path d="M838 210h52v-6h-52z" fill="#94673f"/><path d="M864 204c-6-30-30-40-40-62 22 6 36 24 40 46 2-30 14-52 34-64-2 26-20 48-30 80" fill="#8a9a5b"/><path d="M864 204c4-20 18-30 32-36-8 16-18 26-28 40" fill="#6f7d4a"/></g>`;
+  const W = Math.max(vx + 70, 600);
+  out += `<rect x="20" y="262" width="${W - 40}" height="16" fill="#7d5a3c"/><rect x="20" y="262" width="${W - 40}" height="3" fill="#a8764a"/><rect x="20" y="278" width="${W - 40}" height="22" fill="#000" opacity=".22"/>`;
+  $("#estante").setAttribute("viewBox", `0 0 ${W} 300`);
+  $("#estante").innerHTML = out;
+}
+
+function desenharFiltros() {
+  const cs = categorias(); if (S.cat && !cs.includes(S.cat)) S.cat = null;
+  $("#chips").innerHTML = [`<button class="chip" type="button" data-cat="" aria-pressed="${!S.cat}">Todos</button>`, ...cs.map(c => `<button class="chip" type="button" data-cat="${esc(c)}" aria-pressed="${S.cat === c}">${esc(c)}</button>`)].join("");
+  $("#lista-cats").innerHTML = cs.map(c => `<option value="${esc(c)}">`).join("");
+}
+function card(l, i) {
+  return `<article class="card${l.estoque <= 0 ? " esgotado" : ""}" style="animation-delay:${Math.min(i, 12) * 40}ms">
+    <div style="position:relative"><a class="capa" href="#livro-${esc(l.id)}" aria-label="Ver ${esc(l.titulo)}">${capa(l)}${l.estoque <= 0 ? `<span class="selo cinza">Esgotado</span>` : l.destaque ? `<span class="selo">Destaque</span>` : ""}</a>${S.podeEditar && S.db ? `<button class="editar-card" type="button" data-editar-card="${esc(l.id)}">Editar</button>` : ""}</div>
+    <div class="info"><span class="cat">${esc(l.categoria)}</span><h3><a href="#livro-${esc(l.id)}">${esc(l.titulo)}</a></h3><span class="autor">${esc(l.autor)}</span><p class="desc">${esc(l.descricao)}</p>
+    <div class="rodape-card"><span class="preco">${brl(l.preco)}</span>${botaoComprar(l)}</div></div></article>`;
+}
+function desenharGrade() {
+  const q = norm(S.q.trim());
+  const ls = ordenados().filter(l => (!S.cat || l.categoria === S.cat) && (!q || norm(l.titulo + " " + l.autor).includes(q)));
+  $("#contagem").textContent = ls.length + (ls.length === 1 ? " livro" : " livros");
+  $("#grade").innerHTML = ls.length ? ls.map(card).join("") : `<div class="vazio" style="grid-column:1/-1"><p style="font-size:18px;color:var(--ink);margin:0 0 6px">Nenhum livro encontrado</p><p style="margin:0 0 14px">Tente outro título, autor ou categoria.</p><button class="btn contorno peq" type="button" id="limpar">Limpar filtros</button></div>`;
+}
+
+function desenharDetalhe(id) {
+  const l = S.livros.find(x => x.id === id), el = $("#detalhe");
+  if (!l) { el.innerHTML = `<a class="voltar" href="#livros">← Voltar à estante</a><div class="vazio"><p style="font-size:18px;color:var(--ink)">Este livro não está mais na estante.</p></div>`; return; }
+  const link = linkLivro(l), txt = `"${l.titulo}", de ${l.autor}`;
+  const rel = ordenados().filter(x => x.categoria === l.categoria && x.id !== l.id).slice(0, 4);
+  el.innerHTML = `<a class="voltar" href="#livros">← Voltar à estante</a>
+  <div class="detalhe"><div class="capa">${capa(l)}</div>
+  <div><span class="cat">${esc(l.categoria)}${l.destaque ? " · Destaque" : ""}</span>
+    <h1 style="margin-top:8px">${esc(l.titulo)}</h1><p class="autor" style="font-size:18px;margin:8px 0 0">por ${esc(l.autor)}</p>
+    <p class="preco" style="font-size:32px;margin:20px 0 2px">${brl(l.preco)}</p>
+    <p class="nota" style="margin:0 0 18px">${l.estoque > 0 ? l.estoque + (l.estoque === 1 ? " unidade disponível" : " unidades disponíveis") : "Sem estoque no momento"}</p>
+    ${botaoComprar(l, true)}
+    <h2 style="font-size:22px;margin:30px 0 8px">Sobre o livro</h2><p class="texto" style="margin:0">${esc(l.descricao)}</p>
+    ${link ? `<div class="compart">Compartilhar:
+      <a class="ic" href="https://wa.me/?text=${encodeURIComponent(txt + " " + link)}" target="_blank" rel="noopener" aria-label="Compartilhar no WhatsApp">${ICONE.whats}</a>
+      <a class="ic" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}" target="_blank" rel="noopener" aria-label="Compartilhar no Facebook">${ICONE.face}</a>
+      <a class="ic" href="https://x.com/intent/post?url=${encodeURIComponent(link)}&text=${encodeURIComponent(txt)}" target="_blank" rel="noopener" aria-label="Compartilhar no X">${ICONE.x}</a>
+      <button class="ic" type="button" data-copiar="${esc(link)}" aria-label="Copiar link">${ICONE.link}</button></div>` : ""}
+  </div></div>
+  ${rel.length ? `<h2 style="font-size:28px;margin:56px 0 18px">Você também pode gostar</h2><div class="grade">${rel.map(card).join("")}</div>` : ""}`;
+}
+
+function desenharSobre() {
+  const c = S.config, w = so(c.whatsapp);
+  $("#sobre").innerHTML = `<div class="foto">${imgOk(c.sobreFoto) ? `<img src="${esc(c.sobreFoto)}" alt="">` : capaSVG({id:"sobre", titulo:c.nomeLoja, autor:"desde sempre entre livros"})}</div>
+  <div><span class="cat">${esc(c.nomeLoja)}</span><h1 style="font-size:clamp(34px,5vw,48px);margin:8px 0 18px">${esc(c.sobreTitulo || "Sobre a loja")}</h1><p class="texto" style="margin:0">${esc(c.sobreTexto)}</p>
+  ${w ? `<a class="btn" style="margin-top:24px" href="https://wa.me/${w}" target="_blank" rel="noopener">${ICONE.whats}Fale comigo</a>` : ""}</div>`;
+}
+
+function desenharMarca() {
+  const c = S.config;
+  for (const s of ["#marca-nome", "#hero-nome", "#rod-nome"]) $(s).textContent = c.nomeLoja || "Minha loja";
+  $("#hero-slogan").textContent = c.slogan || ""; $("#rod-slogan").textContent = c.slogan || "";
+  document.title = (c.nomeLoja || "Livros") + " · Livros";
+  const insta = String(c.instagram || "").trim(), face = String(c.facebook || "").trim(), w = so(c.whatsapp), r = [];
+  if (w) r.push(`<a href="https://wa.me/${w}" target="_blank" rel="noopener" aria-label="WhatsApp">${ICONE.whats}</a>`);
+  if (insta) r.push(`<a href="${esc(insta.startsWith("https://") ? insta : "https://instagram.com/" + insta.replace(/^@/, ""))}" target="_blank" rel="noopener" aria-label="Instagram">${ICONE.insta}</a>`);
+  if (face.startsWith("https://")) r.push(`<a href="${esc(face)}" target="_blank" rel="noopener" aria-label="Facebook">${ICONE.face}</a>`);
+  $("#redes").innerHTML = r.join(""); $("#redes").hidden = !r.length;
+  $("#rod-email").textContent = c.email ? "E-mail: " + c.email : "";
+}
+
+// Painel: lista, formulários
+function desenharAdmin() {
+  $("#lista-admin").innerHTML = ordenados().map(l => `<div class="item"><div class="mini">${capa(l)}</div><div><b>${esc(l.titulo)}</b><span>${brl(l.preco)} · estoque ${l.estoque}${l.destaque ? " · destaque" : ""}</span></div>
+    <div class="acoes"><button class="btn contorno peq" type="button" data-editar="${esc(l.id)}">Editar</button><button class="btn contorno peq" type="button" data-excluir="${esc(l.id)}" aria-label="Excluir ${esc(l.titulo)}">Excluir</button></div></div>`).join("") || `<p class="nota">Nenhum livro ainda. Use o formulário ao lado.</p>`;
+}
+function preencherConfig() {
+  const c = S.config;
+  $("#c-nome").value = c.nomeLoja || ""; $("#c-slogan").value = c.slogan || ""; $("#c-whats").value = c.whatsapp || "";
+  $("#c-insta").value = c.instagram || ""; $("#c-face").value = c.facebook || ""; $("#c-email").value = c.email || "";
+  $("#c-stit").value = c.sobreTitulo || ""; $("#c-stexto").value = c.sobreTexto || "";
+}
+function limparForm() {
+  $("#form-livro").reset(); $("#f-id").value = ""; $("#f-estoque").value = 1; S.capaNova = null;
+  $("#f-previa").innerHTML = ""; $("#form-titulo").textContent = "Adicionar livro"; $("#f-cancelar").hidden = true; $("#f-erro").hidden = true;
+}
+function editar(id) {
+  const l = S.livros.find(x => x.id === id); if (!l) return;
+  $("#f-id").value = l.id; $("#f-titulo").value = l.titulo; $("#f-autor").value = l.autor;
+  $("#f-preco").value = String(l.preco).replace(".", ","); $("#f-estoque").value = l.estoque; $("#f-cat").value = l.categoria;
+  $("#f-desc").value = l.descricao; $("#f-destaque").checked = !!l.destaque; S.capaNova = null; $("#f-previa").innerHTML = capa(l);
+  $("#form-titulo").textContent = "Editar livro"; $("#f-cancelar").hidden = false; $("#form-livro").scrollIntoView({behavior:"smooth"});
+}
+
+// Reduz a foto para caber no banco (capa 2:3 ou foto 4:5)
+function lerImagem(file, w, h) {
+  return new Promise((ok, falha) => {
+    const img = new Image(), u = URL.createObjectURL(file);
+    img.onload = () => { const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d"); const r = Math.max(w / img.width, h / img.height); x.drawImage(img, (w - img.width * r) / 2, (h - img.height * r) / 2, img.width * r, img.height * r); URL.revokeObjectURL(u); ok(c.toDataURL("image/jpeg", .8)); };
+    img.onerror = () => { URL.revokeObjectURL(u); falha(new Error("imagem")); };
+    img.src = u;
+  });
+}
+
+// Rotas pelo endereço (#livros, #livro-id, #sobre, #qrcode, #admin)
+function rota() {
+  const h = location.hash.slice(1); let v = "inicio";
+  if (h.startsWith("livro-")) v = "livro"; else if (["sobre", "qrcode", "admin"].includes(h)) v = h;
+  if (v === "admin" && !S.podeEditar) v = "inicio";
+  document.querySelectorAll("[data-view]").forEach(s => s.hidden = s.dataset.view !== v);
+  document.querySelectorAll("[data-nav]").forEach(a => a.dataset.nav === v ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"));
+  if (v === "livro") desenharDetalhe(h.slice(6));
+  if (v === "sobre") desenharSobre();
+  if (v === "qrcode") desenharQR();
+  if (v === "inicio" && h === "livros") $("#livros").scrollIntoView(); else window.scrollTo(0, 0);
+}
+function tudo() { desenharMarca(); desenharEstante(); desenharFiltros(); desenharGrade(); desenharAdmin(); if (!location.hash.startsWith("#admin")) preencherConfig(); const h = location.hash.slice(1); if (h.startsWith("livro-")) desenharDetalhe(h.slice(6)); if (h === "sobre") desenharSobre(); }
+
+// QR code
+function matrizQR(texto) { const q = qrcode(0, "H"); q.addData(texto); q.make(); return q; }
+function pintarQR(cv, tam) {
+  const q = matrizQR(url() || "https://claude.ai"), n = q.getModuleCount(), m = 4, cel = Math.max(2, Math.floor(tam / (n + m * 2))), lado = cel * (n + m * 2);
+  cv.width = cv.height = lado; const x = cv.getContext("2d");
+  x.fillStyle = $("#qr-fundo").value; x.fillRect(0, 0, lado, lado); x.fillStyle = $("#qr-cor").value;
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) x.fillRect((c + m) * cel, (r + m) * cel, cel, cel);
+  if (S.logo) { const L = Math.round(lado * .22), p = (lado - L) / 2, b = Math.round(L * .12); x.fillStyle = $("#qr-fundo").value; x.fillRect(p - b, p - b, L + b * 2, L + b * 2); x.drawImage(S.logo, p, p, L, L); }
+  return cv;
+}
+function desenharQR() {
+  const erro = $("#qr-erro"); $("#qr-url").textContent = url() || "O link da loja aparece aqui depois da publicação.";
+  if (typeof qrcode !== "function") { erro.textContent = "Carregando o gerador de QR code…"; erro.hidden = false; setTimeout(() => location.hash === "#qrcode" && desenharQR(), 800); return; }
+  erro.hidden = true; $("#qr-tam-v").textContent = $("#qr-tam").value; pintarQR($("#qr-canvas"), +$("#qr-tam").value);
+}
+async function folhaA4() {
+  await document.fonts.ready;
+  const W = 1240, H = 1754, cv = document.createElement("canvas"); cv.width = W; cv.height = H; const x = cv.getContext("2d");
+  x.fillStyle = "#fffdf6"; x.fillRect(0, 0, W, H); x.strokeStyle = "#3a4422"; x.lineWidth = 6; x.strokeRect(60, 60, W - 120, H - 120);
+  x.fillStyle = "#3a4422"; x.textAlign = "center"; x.font = "600 84px 'Playfair Display', Georgia, serif"; x.fillText(S.config.nomeLoja || "Livros", W / 2, 270);
+  x.font = "36px Inter, sans-serif"; x.fillStyle = "#5f6650"; x.fillText(S.config.slogan ? S.config.slogan.slice(0, 60) : "", W / 2, 340);
+  const q = pintarQR(document.createElement("canvas"), 760); x.drawImage(q, (W - q.width) / 2, 420);
+  x.fillStyle = "#3a4422"; x.font = "600 44px Inter, sans-serif"; x.fillText("Aponte a câmera do celular", W / 2, 420 + q.height + 90);
+  x.font = "36px Inter, sans-serif"; x.fillStyle = "#5f6650"; x.fillText("e veja todos os livros à venda", W / 2, 420 + q.height + 145);
+  return cv;
+}
+async function baixar(cv, nome) {
+  const d = window.claude ? await claude.use("downloads") : null;
+  if (!d) { cv.toBlob(b => { const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = nome; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); aviso("Download iniciado."); }, "image/png"); return; }
+  const blob = await new Promise(r => cv.toBlob(r, "image/png"));
+  try { await d.save({filename:nome, data:blob}); aviso("Arquivo salvo."); } catch (e) { if (e && e.code !== "declined") aviso("Não foi possível baixar agora."); }
+}
+async function copiar(t) { try { await navigator.clipboard.writeText(t); aviso("Link copiado!"); } catch { aviso("Copie o link: " + t); } }
+
+// Adicionar livro direto da estante
+const fecharAdd = () => { $("#modal-add").classList.remove("aberto"); };
+function abrirAdd() {
+  $("#form-add").reset(); $("#a-estoque").value = 1; S.capaAdd = null; $("#a-erro").hidden = true;
+  const cx = $("#add-foto-caixa"), im = cx.querySelector("img"); if (im) im.remove(); $("#add-foto-txt").hidden = false;
+  $("#modal-add").classList.add("aberto"); $("#a-titulo").focus();
+}
+$("#abrir-add").addEventListener("click", abrirAdd);
+$("#add-cancelar").addEventListener("click", fecharAdd);
+$("#modal-add").addEventListener("click", e => { if (e.target.id === "modal-add") fecharAdd(); });
+$("#add-foto").addEventListener("change", async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try { S.capaAdd = await lerImagem(f, 360, 540); const cx = $("#add-foto-caixa"); let im = cx.querySelector("img"); if (!im) { im = document.createElement("img"); im.alt = "Foto escolhida"; cx.prepend(im); } im.src = S.capaAdd; $("#add-foto-txt").hidden = true; }
+  catch { aviso("Não consegui ler essa foto. Tente outra."); }
+});
+$("#form-add").addEventListener("submit", async e => {
+  e.preventDefault(); const err = $("#a-erro"); err.hidden = true;
+  const v = {titulo:$("#a-titulo").value.trim(), autor:$("#a-autor").value.trim(), preco:Number($("#a-preco").value.replace(/\./g, "").replace(",", ".")), estoque:Number($("#a-estoque").value || 0), categoria:$("#a-cat").value.trim(), descricao:$("#a-desc").value.trim(), destaque:$("#a-destaque").checked};
+  const falta = [];
+  if (!v.titulo) falta.push("título"); if (!v.autor) falta.push("autor"); if (!v.categoria) falta.push("categoria");
+  if (!(v.preco > 0)) falta.push("preço maior que zero"); if (!Number.isInteger(v.estoque) || v.estoque < 0) falta.push("quantidade");
+  if (falta.length) { err.textContent = "Preencha: " + falta.join(", ") + "."; err.hidden = false; return; }
+  if (!S.db) { err.textContent = "Sem conexão com o banco. Tente de novo em instantes."; err.hidden = false; return; }
+  const b = $("#add-salvar"); b.disabled = true; b.textContent = "Publicando…";
+  try { await S.db.collection("livros").doc().set({...v, capa:S.capaAdd || "", criadoEm:Date.now()}); fecharAdd(); aviso("Livro publicado na vitrine!"); }
+  catch (x) { err.textContent = x && x.code === "quota_exceeded" ? "O espaço da loja está cheio. Exclua livros antigos." : "Não foi possível publicar. Tente de novo."; err.hidden = false; }
+  b.disabled = false; b.textContent = "Publicar livro";
+});
+
+// QR code em tela cheia, para mostrar ao cliente
+function mostrarQR() {
+  if (typeof qrcode !== "function") { aviso("O gerador de QR code ainda está carregando. Tente de novo."); return; }
+  $("#tq-nome").textContent = S.config.nomeLoja || "Livros";
+  const cv = $("#tq-canvas"), q = matrizQR(url() || "https://claude.ai"), n = q.getModuleCount(), m = 3, cel = 12, lado = cel * (n + m * 2);
+  cv.width = cv.height = lado; const x = cv.getContext("2d"); x.fillStyle = "#ffffff"; x.fillRect(0, 0, lado, lado); x.fillStyle = "#1f2618";
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) x.fillRect((c + m) * cel, (r + m) * cel, cel, cel);
+  $("#tela-qr").classList.add("aberto"); $("#tq-fechar").focus();
+  try { const p = document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); if (p && p.catch) p.catch(() => {}); } catch {}
+}
+function fecharQR() { $("#tela-qr").classList.remove("aberto"); try { if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); } catch {} }
+$("#tq-fechar").addEventListener("click", fecharQR);
+$("#tela-qr").addEventListener("click", e => { if (e.target.id === "tela-qr") fecharQR(); });
+
+// Eventos
+$("#q").addEventListener("input", e => { S.q = e.target.value; desenharGrade(); });
+document.addEventListener("click", e => {
+  const ch = e.target.closest("[data-cat]"); if (ch) { S.cat = ch.dataset.cat || null; desenharFiltros(); desenharGrade(); return; }
+  if (e.target.closest("#limpar")) { S.q = ""; S.cat = null; $("#q").value = ""; desenharFiltros(); desenharGrade(); return; }
+  if (e.target.closest("[data-mostrar-qr]")) { mostrarQR(); return; }
+  const ec = e.target.closest("[data-editar-card]"); if (ec) { location.hash = "admin"; setTimeout(() => editar(ec.dataset.editarCard), 50); return; }
+  const cp = e.target.closest("[data-copiar]"); if (cp) { copiar(cp.dataset.copiar); return; }
+  const ed = e.target.closest("[data-editar]"); if (ed) { editar(ed.dataset.editar); return; }
+  const ex = e.target.closest("[data-excluir]"); if (ex) { const l = S.livros.find(x => x.id === ex.dataset.excluir); if (!l) return; S.apagar = l.id; $("#modal-p").textContent = `"${l.titulo}" sai da vitrine. Não dá para desfazer.`; $("#modal").classList.add("aberto"); $("#modal-nao").focus(); }
+});
+$("#modal-nao").addEventListener("click", () => $("#modal").classList.remove("aberto"));
+$("#modal").addEventListener("click", e => { if (e.target.id === "modal") $("#modal").classList.remove("aberto"); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") { $("#modal").classList.remove("aberto"); fecharAdd(); fecharQR(); } });
+$("#modal-sim").addEventListener("click", async () => {
+  const id = S.apagar; $("#modal").classList.remove("aberto"); if (!id || !S.db) return;
+  try { await S.db.collection("livros").doc(id).delete(); aviso("Livro excluído."); if ($("#f-id").value === id) limparForm(); } catch { aviso("Não foi possível excluir. Tente de novo."); }
+});
+$("#f-cancelar").addEventListener("click", limparForm);
+$("#f-capa").addEventListener("change", async e => { const f = e.target.files[0]; if (!f) return; try { S.capaNova = await lerImagem(f, 360, 540); $("#f-previa").innerHTML = `<img src="${S.capaNova}" alt="Prévia da capa">`; } catch { aviso("Não consegui ler essa imagem."); } });
+$("#c-foto").addEventListener("change", async e => { const f = e.target.files[0]; if (!f) return; try { S.fotoNova = await lerImagem(f, 480, 600); aviso("Foto pronta. Salve os dados da loja."); } catch { aviso("Não consegui ler essa imagem."); } });
+
+$("#form-livro").addEventListener("submit", async e => {
+  e.preventDefault(); const err = $("#f-erro"); err.hidden = true;
+  const v = {titulo:$("#f-titulo").value.trim(), autor:$("#f-autor").value.trim(), preco:Number($("#f-preco").value.replace(/\./g, "").replace(",", ".")), estoque:Number($("#f-estoque").value), categoria:$("#f-cat").value.trim(), descricao:$("#f-desc").value.trim(), destaque:$("#f-destaque").checked};
+  const falta = [];
+  if (!v.titulo) falta.push("título"); if (!v.autor) falta.push("autor"); if (!v.categoria) falta.push("categoria"); 
+  if (!(v.preco > 0)) falta.push("preço maior que zero"); if (!Number.isInteger(v.estoque) || v.estoque < 0) falta.push("estoque (número inteiro, 0 ou mais)");
+  if (falta.length) { err.textContent = "Confira: " + falta.join(", ") + "."; err.hidden = false; return; }
+  const id = $("#f-id").value, antigo = S.livros.find(x => x.id === id);
+  const dados = {...v, capa:S.capaNova || (antigo && antigo.capa) || "", criadoEm:(antigo && antigo.criadoEm) || Date.now()};
+  const btn = $("#f-salvar"); btn.disabled = true; btn.textContent = "Salvando…";
+  try { const ref = id ? S.db.collection("livros").doc(id) : S.db.collection("livros").doc(); await ref.set(dados); aviso(id ? "Livro atualizado." : "Livro adicionado à vitrine."); limparForm(); }
+  catch (x) { err.textContent = x && x.code === "quota_exceeded" ? "O espaço da loja está cheio. Exclua livros antigos ou use fotos menores." : "Não foi possível salvar. Tente de novo."; err.hidden = false; }
+  btn.disabled = false; btn.textContent = "Salvar livro";
+});
+$("#form-config").addEventListener("submit", async e => {
+  e.preventDefault(); const err = $("#c-erro"); err.hidden = true;
+  const c = {nomeLoja:$("#c-nome").value.trim(), slogan:$("#c-slogan").value.trim(), whatsapp:so($("#c-whats").value), instagram:$("#c-insta").value.trim(), facebook:$("#c-face").value.trim(), email:$("#c-email").value.trim(), sobreTitulo:$("#c-stit").value.trim(), sobreTexto:$("#c-stexto").value.trim(), sobreFoto:S.fotoNova || S.config.sobreFoto || ""};
+  const p = [];
+  if (!c.nomeLoja) p.push("o nome da loja é obrigatório"); if (c.whatsapp && (c.whatsapp.length < 12 || c.whatsapp.length > 13)) p.push("WhatsApp: use 55 + DDD + número, ex.: 5511999999999");
+  if (c.facebook && !c.facebook.startsWith("https://")) p.push("Facebook: cole o link completo, começando com https://"); if (c.email && !/^\S+@\S+\.\S+$/.test(c.email)) p.push("e-mail inválido");
+  if (p.length) { err.textContent = p.join(". ") + "."; err.hidden = false; return; }
+  try { await S.db.doc("loja/config").set(c); S.fotoNova = null; aviso("Dados da loja salvos."); } catch { err.textContent = "Não foi possível salvar. Tente de novo."; err.hidden = false; }
+});
+for (const id of ["#qr-tam", "#qr-cor", "#qr-fundo"]) $(id).addEventListener("input", desenharQR);
+$("#qr-logo").addEventListener("change", e => { const f = e.target.files[0]; if (!f) return; const img = new Image(); img.onload = () => { S.logo = img; $("#qr-sem-logo").hidden = false; desenharQR(); }; img.src = URL.createObjectURL(f); });
+$("#qr-sem-logo").addEventListener("click", () => { S.logo = null; $("#qr-logo").value = ""; $("#qr-sem-logo").hidden = true; desenharQR(); });
+$("#qr-png").addEventListener("click", () => typeof qrcode === "function" && baixar(pintarQR(document.createElement("canvas"), +$("#qr-tam").value), "qrcode-loja.png"));
+$("#qr-folha").addEventListener("click", async () => typeof qrcode === "function" && baixar(await folhaA4(), "qrcode-para-imprimir.png"));
+$("#qr-link").addEventListener("click", () => url() ? copiar(url()) : aviso("O link aparece depois da publicação."));
+window.addEventListener("hashchange", rota);
+
+tudo(); rota();
+
+// Banco de dados: dados ao vivo para quem está logado; edição só para quem pode
+(async () => {
+  if (!window.claude || typeof claude.use !== "function") { $("#admin-status").textContent = "Abra a página pelo Claude para editar."; return; }
+  const [db, user] = await Promise.all([claude.use("db"), claude.use("user")]);
+  S.podeEditar = !!(user && (await user.canEdit()));
+  $("#nav-admin").hidden = !S.podeEditar;
+  if (!db) { $("#admin-status").textContent = "Não foi possível conectar ao banco de dados."; return; }
+  S.db = db; let cfg = null, livros = null;
+  const timer = setTimeout(() => { $("#admin-status").textContent = "O banco está demorando para responder. Os dados podem estar desatualizados."; }, 10000);
+  const aplicar = () => {
+    if (!cfg) return;
+    S.config = {...INICIAL.config, ...cfg}; if (livros) S.livros = livros; S.doBanco = true; tudo();
+  };
+  db.doc("loja/config").onSnapshot(s => { if (!s.metadata.fromCache) clearTimeout(timer); cfg = s.exists ? s.data() : null; aplicar(); }, () => clearTimeout(timer));
+  db.collection("livros").onSnapshot(s => { livros = s.docs.map(d => ({id:d.id, ...d.data()})); aplicar(); }, () => {});
+  if (S.podeEditar) { $("#abrir-add").hidden = false; desenharGrade(); $("#admin-status").textContent = "Aqui você cadastra, edita e exclui livros, e muda os dados da loja. Tudo aparece na vitrine na hora."; $("#admin-area").hidden = false; preencherConfig(); }
+  if (location.hash === "#admin") rota();
+})();
+}
+</script>
+</body>
+</html>
